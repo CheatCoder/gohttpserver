@@ -17,6 +17,7 @@ import (
 
 	"github.com/alecthomas/kingpin"
 	accesslog "github.com/codeskyblue/go-accesslog"
+	"github.com/getlantern/systray"
 	"github.com/go-yaml/yaml"
 	"github.com/goji/httpauth"
 	"github.com/gorilla/handlers"
@@ -163,7 +164,7 @@ func main() {
 	if ss.PlistProxy != "" {
 		log.Printf("plistproxy: %s", strconv.Quote(ss.PlistProxy))
 	}
-	
+
 	var hdlr http.Handler = ss
 
 	hdlr = accesslog.NewLoggingHandler(hdlr, logger)
@@ -211,6 +212,7 @@ func main() {
 	_, port, _ := net.SplitHostPort(gcfg.Addr)
 	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), getLocalIP(), port)
 
+	systray.Run(startSystray, onExit)
 	var err error
 	if gcfg.Key != "" && gcfg.Cert != "" {
 		err = http.ListenAndServeTLS(gcfg.Addr, gcfg.Cert, gcfg.Key, nil)
