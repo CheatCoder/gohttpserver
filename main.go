@@ -212,7 +212,7 @@ func main() {
 	_, port, _ := net.SplitHostPort(gcfg.Addr)
 	log.Printf("listening on %s, local address http://%s:%s\n", strconv.Quote(gcfg.Addr), getLocalIP(), port)
 
-	systray.Run(startSystray, onExit)
+	go systray.Run(startSystray, onExit)
 	var err error
 	if gcfg.Key != "" && gcfg.Cert != "" {
 		err = http.ListenAndServeTLS(gcfg.Addr, gcfg.Cert, gcfg.Key, nil)
